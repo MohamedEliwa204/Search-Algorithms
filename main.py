@@ -5,6 +5,7 @@ import time
 
 # list of available actions
 actions = ["Up", "Down", "Left", "Right"]
+GOAL_STATE = (0, 1, 2, 3, 4, 5, 6, 7, 8)
 
 
 class PuzzleNode:
@@ -135,3 +136,56 @@ class PuzzleNode:
                     neighbors.append(new_node)
 
         return neighbors
+
+
+def goal_test(state):
+    return state == GOAL_STATE
+
+
+# search algorithms
+def bfs(initial_state):
+    queue = deque()
+    start_node = PuzzleNode(initial_state)
+    queue.append(start_node)
+    if goal_test(start_node.state):
+        print("you pass the goal😂")
+        return start_node, [start_node], 0  # goal, visited_nodes, count
+
+    visited = set()
+    visited.add(start_node.state)
+
+    nodes_expanded = []
+    nodes_expanded_count = 0
+
+    while (len(queue) != 0):
+        f = queue.popleft()
+        nodes_expanded.append(f)  # track expanded node
+        nodes_expanded_count += 1
+
+        for neighbor in f.get_neighbors():
+            if neighbor.state not in visited:
+
+                # Check the neighbor's state
+                if goal_test(neighbor.state):
+                    print("Goal Found!🥳🥳")
+                    nodes_expanded.append(neighbor)
+
+                    return neighbor, nodes_expanded, nodes_expanded_count
+
+                visited.add(neighbor.state)
+                queue.append(neighbor)
+
+    print("failed to find the solution!😓")
+    return None, nodes_expanded, nodes_expanded_count
+
+
+def dfs():
+    pass
+
+
+def dldfs():
+    pass
+
+
+def A_star():
+    pass
