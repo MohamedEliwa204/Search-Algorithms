@@ -1,4 +1,5 @@
 import heapq
+import math
 from collections import deque
 import time
 
@@ -7,33 +8,59 @@ actions = ["Up", "Down", "Left", "Right"]
 
 
 class PuzzleNode:
-    def __init__(self, state, parent_node=None, parent_action=None, g=0, h_func=None):
+    def __init__(self, state, parent_node=None, parent_action=None, g=0, heuristic_name=None):
         self.state = tuple(state)  # to be able too put it in set
         self.parent_node = parent_node
         self.g = g  # cost from the start
         self.parent_action = parent_action  # to be able to keep track the path
-        self.h_func = h_func  # to save it to the neighbors
+        self.heuristic_name = heuristic_name  # to save it to the neighbors
 
         # calculate heuristic if provided
-        if h_func:
-            self.h = h_func(self.state)
+        if heuristic_name == "Manhattan":
+            self.h = self.calculate_manhattan()
+            self.f = self.h + self.g
+
+        elif heuristic_name == "Euclidean":
+            self.h = self.calculate_euclidean()
             self.f = self.h + self.g
 
     # methods for priority queue
     def __lt__(self, other):
         return self.f < other.f
 
-    # --- Methods for 'visited' set ---
+    # Methods for 'visited' set
     def __eq__(self, other):
         return self.state == other.state
 
     def __hash__(self):
         return hash(self.state)
 
+    def calculate_manhattan(self):
+        dis = 0
+        n = 3
+        for idx, elem in enumerate(self.state):
+            if elem == 0:
+                continue
+            curr_row, curr_col = divmod(idx, n)
+            goal_row, goal_col = divmod(elem, n)
+            dis += abs(curr_row - goal_row) + abs(curr_col - goal_col)
+        return dis
+
+    def calculate_euclidean(self):
+        dis = 0
+        n = 3
+        for idx, elem in enumerate(self.state):
+            if elem == 0:
+                continue
+            curr_row, curr_col = divmod(idx, n)
+            goal_row, goal_col = divmod(elem, n)
+            dis += math.sqrt(math.pow((curr_row - goal_row), 2) + math.pow((curr_col - goal_col), 2))
+        return dis
+
     def get_neighbors(self):
         neighbors = []
 
-        idx = self.state.index("0")
+        idx = self.state.index(0)
         for action in actions:
             if action == "Up":
                 if idx < 3:  # if it in the first row it can't move UP
@@ -49,7 +76,7 @@ class PuzzleNode:
                         parent_node=self,
                         parent_action=action,
                         g=self.g + 1,
-                        h_func=self.h_func  # to pass the h_func to the neighbor if it exists
+                        heuristic_name=self.heuristic_name  # to pass the heuristic_name to the neighbor if it exists
                     )
                     neighbors.append(new_node)
 
@@ -67,7 +94,7 @@ class PuzzleNode:
                         parent_node=self,
                         parent_action=action,
                         g=self.g + 1,
-                        h_func=self.h_func  # to pass the h_func to the neighbor if it exists
+                        heuristic_name=self.heuristic_name  # to pass the heuristic_name to the neighbor if it exists
                     )
                     neighbors.append(new_node)
 
@@ -85,7 +112,7 @@ class PuzzleNode:
                         parent_node=self,
                         parent_action=action,
                         g=self.g + 1,
-                        h_func=self.h_func  # to pass the h_func to the neighbor if it exists
+                        heuristic_name=self.heuristic_name  # to pass the heuristic_name to the neighbor if it exists
                     )
                     neighbors.append(new_node)
 
@@ -103,7 +130,7 @@ class PuzzleNode:
                         parent_node=self,
                         parent_action=action,
                         g=self.g + 1,
-                        h_func=self.h_func  # to pass the h_func to the neighbor if it exists
+                        heuristic_name=self.heuristic_name  # to pass the heuristic_name to the neighbor if it exists
                     )
                     neighbors.append(new_node)
 
