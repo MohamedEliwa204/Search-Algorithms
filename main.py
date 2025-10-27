@@ -200,7 +200,7 @@ def dfs(initial_state):
 
         nodes_expanded.append(f)  # track expanded node
         nodes_expanded_count += 1
-
+        visited.add(f.state)
         for neighbor in f.get_neighbors():
             if neighbor.state not in visited:
 
