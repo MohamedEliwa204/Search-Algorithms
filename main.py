@@ -179,8 +179,42 @@ def bfs(initial_state):
     return None, nodes_expanded, nodes_expanded_count
 
 
-def dfs():
-    pass
+def dfs(initial_state):
+    stack = deque()
+    start_node = PuzzleNode(initial_state)
+    stack.append(start_node)
+    if goal_test(start_node.state):
+        print("you pass the goal😂")
+        return start_node, [start_node], 0  # goal, visited_nodes, count
+
+    visited = set()
+
+    nodes_expanded = []
+    nodes_expanded_count = 0
+
+    while (len(stack) > 0):
+        f = stack.pop()
+
+        if f.state in visited:
+            continue
+
+        nodes_expanded.append(f)  # track expanded node
+        nodes_expanded_count += 1
+
+        for neighbor in f.get_neighbors():
+            if neighbor.state not in visited:
+
+                # Check the neighbor's state
+                if goal_test(neighbor.state):
+                    print("Goal Found!🥳🥳")
+                    nodes_expanded.append(neighbor)
+
+                    return neighbor, nodes_expanded, nodes_expanded_count
+                visited.add(neighbor.state)
+                stack.append(neighbor)
+
+    print("failed to find the solution!😓")
+    return None, nodes_expanded, nodes_expanded_count
 
 
 def dldfs():
