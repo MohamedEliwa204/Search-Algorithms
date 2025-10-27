@@ -210,7 +210,7 @@ def dfs(initial_state):
                     nodes_expanded.append(neighbor)
 
                     return neighbor, nodes_expanded, nodes_expanded_count
-                visited.add(neighbor.state)
+
                 stack.append(neighbor)
 
     print("failed to find the solution!😓")
