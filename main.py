@@ -223,11 +223,9 @@ def depth_limited_dfs(node, depth, limit, visited, expanded_nodes):
     visited.add(node.state)
     expanded_nodes.append(node)
     if goal_test(node.state):
-
         return node
     if depth == limit:
         return None
-
 
     for neighbor in node.get_neighbors():
         if neighbor.state not in visited:
@@ -267,7 +265,7 @@ def A_star(initial_state, h_name):
     while (len(pq) != 0):
         f, node = heapq.heappop(pq)
 
-        if node in visited:
+        if node in visited:  # once i pop from the pq then i couldn't find one is better so i continue
             continue
         nodes_expanded.append(node)
         nodes_expanded_count += 1
@@ -279,6 +277,7 @@ def A_star(initial_state, h_name):
 
         for neighbour in node.get_neighbors():
             if neighbour not in visited:
-                heapq.heappush(pq, (neighbour.f, neighbour))
+                heapq.heappush(pq, (neighbour.f,
+                                    neighbour))  # instead of check if it in the pq and minimize the f i push it and skip if i visited it
 
     return None, nodes_expanded, nodes_expanded_count
