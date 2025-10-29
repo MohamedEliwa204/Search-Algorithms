@@ -2,8 +2,10 @@ import heapq
 import math
 from collections import deque
 import time
+from re import search
 
 # list of available actions
+INF = 10 ** 9
 actions = ["Up", "Down", "Left", "Right"]
 GOAL_STATE = (0, 1, 2, 3, 4, 5, 6, 7, 8)
 
@@ -15,7 +17,7 @@ class PuzzleNode:
         self.g = g  # cost from the start
         self.parent_action = parent_action  # to be able to keep track the path
         self.heuristic_name = heuristic_name  # to save it to the neighbors
-
+        self.h = 0
         # calculate heuristic if provided
         if heuristic_name == "Manhattan":
             self.h = self.calculate_manhattan()
@@ -217,9 +219,66 @@ def dfs(initial_state):
     return None, nodes_expanded, nodes_expanded_count
 
 
-def dldfs():
-    pass
+def depth_limited_dfs(node, depth, limit, visited, expanded_nodes):
+    visited.add(node.state)
+    expanded_nodes.append(node)
+    if goal_test(node.state):
+
+        return node
+    if depth == limit:
+        return None
 
 
-def A_star():
-    pass
+    for neighbor in node.get_neighbors():
+        if neighbor.state not in visited:
+
+            result = depth_limited_dfs(neighbor, depth + 1, limit, visited, expanded_nodes)
+            if result:
+                return result  # to return once we found the goal and reduce the complexity
+    return None
+
+
+def iddfs(initial_state, limit):
+    start_node = PuzzleNode(initial_state)
+    expanded_nodes = []
+    for i in range(1, limit + 1):
+        print(f"Depth limit = {i}")
+        visited = set()
+        result = depth_limited_dfs(start_node, 0, i, visited, expanded_nodes)
+        if result:
+            print("goal found!🥳🥳")
+            return result, expanded_nodes, len(expanded_nodes)
+    print("goal not found in thsi depth limit!😓")
+    return None, expanded_nodes, len(expanded_nodes)
+
+
+def A_star(initial_state, h_name):
+    pq = []
+    start_node = PuzzleNode(initial_state, heuristic_name=h_name)
+
+    heapq.heappush(pq, (start_node.f, start_node))
+    if goal_test(start_node.state):
+        print("you pass the goal😂")
+        return start_node, [start_node], 0  # goal, visited_nodes, count
+
+    visited = set()
+    nodes_expanded = []
+    nodes_expanded_count = 0
+    while (len(pq) != 0):
+        f, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+        nodes_expanded.append(node)
+        nodes_expanded_count += 1
+        visited.add(node)
+
+        if goal_test(node.state):
+            print("Goal Found!🥳🥳")
+            return node, nodes_expanded, nodes_expanded_count
+
+        for neighbour in node.get_neighbors():
+            if neighbour not in visited:
+                heapq.heappush(pq, (neighbour.f, neighbour))
+
+    return None, nodes_expanded, nodes_expanded_count
