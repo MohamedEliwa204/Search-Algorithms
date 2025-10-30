@@ -167,6 +167,7 @@ def bfs(initial_state):
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
                     nodes_expanded.append(neighbor)
+                    nodes_expanded_count += 1
                     return neighbor, nodes_expanded, nodes_expanded_count, neighbor.g
 
                 visited.add(neighbor.state)
@@ -205,6 +206,7 @@ def dfs(initial_state):
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
                     nodes_expanded.append(neighbor)
+                    nodes_expanded_count += 1
                     if neighbor.g > search_depth:
                         search_depth = neighbor.g
                     return neighbor, nodes_expanded, nodes_expanded_count, search_depth
