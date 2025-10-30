@@ -1,8 +1,6 @@
 import heapq
 import math
 from collections import deque
-import time
-from re import search
 
 # list of available actions
 INF = 10 ** 9
@@ -169,20 +167,21 @@ def bfs(initial_state):
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
                     nodes_expanded.append(neighbor)
-                    return neighbor, nodes_expanded, nodes_expanded_count
+                    return neighbor, nodes_expanded, nodes_expanded_count, neighbor.g
 
                 visited.add(neighbor.state)
                 queue.append(neighbor)
 
-    return None, nodes_expanded, nodes_expanded_count
+    return None, nodes_expanded, nodes_expanded_count, None
 
 
 def dfs(initial_state):
+    search_depth = -1
     stack = deque()
     start_node = PuzzleNode(initial_state)
     stack.append(start_node)
     if goal_test(start_node.state):
-        return start_node, [start_node], 0  # goal, visited_nodes, count
+        return start_node, [start_node], 0, 0  # goal, visited_nodes, count, search_depth
 
     visited = set()
 
@@ -195,6 +194,8 @@ def dfs(initial_state):
         if f.state in visited:
             continue
 
+        if f.g > search_depth:
+            search_depth = f.g
         nodes_expanded.append(f)  # track expanded node
         nodes_expanded_count += 1
         visited.add(f.state)
@@ -204,28 +205,30 @@ def dfs(initial_state):
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
                     nodes_expanded.append(neighbor)
-                    return neighbor, nodes_expanded, nodes_expanded_count
+                    if neighbor.g > search_depth:
+                        search_depth = neighbor.g
+                    return neighbor, nodes_expanded, nodes_expanded_count, search_depth
 
                 stack.append(neighbor)
 
-    return None, nodes_expanded, nodes_expanded_count
+    return None, nodes_expanded, nodes_expanded_count, search_depth
 
 
 def depth_limited_dfs(node, depth, limit, visited, expanded_nodes):
     visited.add(node.state)
     expanded_nodes.append(node)
     if goal_test(node.state):
-        return node
+        return node, depth
     if depth == limit:
-        return None
+        return None, None
 
     for neighbor in node.get_neighbors():
         if neighbor.state not in visited:
 
-            result = depth_limited_dfs(neighbor, depth + 1, limit, visited, expanded_nodes)
+            result, result_depth = depth_limited_dfs(neighbor, depth + 1, limit, visited, expanded_nodes)
             if result:
-                return result  # to return once we found the goal and reduce the complexity
-    return None
+                return result, result_depth  # to return once we found the goal and reduce the complexity
+    return None, None
 
 
 def iddfs(initial_state, limit):
@@ -233,19 +236,20 @@ def iddfs(initial_state, limit):
     expanded_nodes = []
     for i in range(1, limit + 1):
         visited = set()
-        result = depth_limited_dfs(start_node, 0, i, visited, expanded_nodes)
+        result, result_depth = depth_limited_dfs(start_node, 0, i, visited, expanded_nodes)
         if result:
-            return result, expanded_nodes, len(expanded_nodes)
-    return None, expanded_nodes, len(expanded_nodes)
+            return result, expanded_nodes, len(expanded_nodes), result_depth
+    return None, expanded_nodes, len(expanded_nodes), None
 
 
 def A_star(initial_state, h_name):
+    search_depth = -1
     pq = []
     start_node = PuzzleNode(initial_state, heuristic_name=h_name)
 
     heapq.heappush(pq, (start_node.f, start_node))
     if goal_test(start_node.state):
-        return start_node, [start_node], 0  # goal, visited_nodes, count
+        return start_node, [start_node], 0, 0  # goal, visited_nodes, count, search_depth
 
     visited = set()
     nodes_expanded = []
@@ -255,17 +259,20 @@ def A_star(initial_state, h_name):
 
         if node in visited:  # once i pop from the pq then i couldn't find one is better so i continue
             continue
+
         nodes_expanded.append(node)
         nodes_expanded_count += 1
         visited.add(node)
 
+        if node.g > search_depth:
+            search_depth = node.g
+
         if goal_test(node.state):
-            return node, nodes_expanded, nodes_expanded_count
+            return node, nodes_expanded, nodes_expanded_count, search_depth
 
         for neighbour in node.get_neighbors():
             if neighbour not in visited:
                 heapq.heappush(pq, (neighbour.f,
                                     neighbour))  # instead of check if it in the pq and minimize the f i push it and skip if i visited it
 
-    return None, nodes_expanded, nodes_expanded_count
-
+    return None, nodes_expanded, nodes_expanded_count, search_depth
