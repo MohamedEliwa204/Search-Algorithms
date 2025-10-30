@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-Puzzle Solver</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="solver-container">
+        
+        <!--  Input Section  -->
+        <div id="input-container">
+            <h1>8-Puzzle Solver</h1>
+            <p>Enter the initial state (use 0 for the empty tile):</p>
+
+            <div id="puzzle-grid" class="puzzle-grid">
+                <!-- Input cells -->
+                <input type="number" class="puzzle-cell" min="0" max="8" value="1">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="2">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="3">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="4">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="5">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="6">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="7">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="0">
+                <input type="number" class="puzzle-cell" min="0" max="8" value="8">
+            </div>
+
+            <!-- Algorithm Selection -->
+            <div class="controls">
+                <select id="algorithm-select">
+                    <option value="bfs">BFS (Breadth-First Search)</option>
+                    <option value="dfs">DFS (Depth-First Search)</option>
+                    <option value="iddfs">IDDFS (Iterative Deepening DFS)</option>
+                    <option value="a_star_manhattan">A* (Manhattan)</option>
+                    <option value="a_star_euclidean">A* (Euclidean)</option>
+                </select>
+                
+                <button id="solve-button">Solve</button>
+            </div>
+            
+            <p id="error-message" class="error"></p>
+        </div>
+
+        <!-- Solution Display Section (Hidden) -->
+        <div id="display-container" class="hidden">
+            <h2>Displaying Solution...</h2>
+            
+            <div class="solution-content">
+                
+                <!-- Animation Board -->
+                <div class="display-board-container">
+                    <div id="display-board" class="display-board">
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div id="results-panel" class="results-panel">
+                    <h3>Results:</h3>
+                    <div class="result-item">
+                        <span>Cost (Moves):</span>
+                        <span id="res-cost"></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Search Depth:</span>
+                        <span id="res-depth"></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Nodes Expanded:</span>
+                        <span id="res-nodes"></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Search Time (s):</span>
+                        <span id="res-time"></span>
+                    </div>
+                    <button id="reset-button">Reset >></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

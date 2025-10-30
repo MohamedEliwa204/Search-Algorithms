@@ -150,7 +150,6 @@ def bfs(initial_state):
     start_node = PuzzleNode(initial_state)
     queue.append(start_node)
     if goal_test(start_node.state):
-        print("you pass the goal😂")
         return start_node, [start_node], 0  # goal, visited_nodes, count
 
     visited = set()
@@ -169,15 +168,12 @@ def bfs(initial_state):
 
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
-                    print("Goal Found!🥳🥳")
                     nodes_expanded.append(neighbor)
-
                     return neighbor, nodes_expanded, nodes_expanded_count
 
                 visited.add(neighbor.state)
                 queue.append(neighbor)
 
-    print("failed to find the solution!😓")
     return None, nodes_expanded, nodes_expanded_count
 
 
@@ -186,7 +182,6 @@ def dfs(initial_state):
     start_node = PuzzleNode(initial_state)
     stack.append(start_node)
     if goal_test(start_node.state):
-        print("you pass the goal😂")
         return start_node, [start_node], 0  # goal, visited_nodes, count
 
     visited = set()
@@ -208,14 +203,11 @@ def dfs(initial_state):
 
                 # Check the neighbor's state
                 if goal_test(neighbor.state):
-                    print("Goal Found!🥳🥳")
                     nodes_expanded.append(neighbor)
-
                     return neighbor, nodes_expanded, nodes_expanded_count
 
                 stack.append(neighbor)
 
-    print("failed to find the solution!😓")
     return None, nodes_expanded, nodes_expanded_count
 
 
@@ -240,13 +232,10 @@ def iddfs(initial_state, limit):
     start_node = PuzzleNode(initial_state)
     expanded_nodes = []
     for i in range(1, limit + 1):
-        print(f"Depth limit = {i}")
         visited = set()
         result = depth_limited_dfs(start_node, 0, i, visited, expanded_nodes)
         if result:
-            print("goal found!🥳🥳")
             return result, expanded_nodes, len(expanded_nodes)
-    print("goal not found in thsi depth limit!😓")
     return None, expanded_nodes, len(expanded_nodes)
 
 
@@ -256,7 +245,6 @@ def A_star(initial_state, h_name):
 
     heapq.heappush(pq, (start_node.f, start_node))
     if goal_test(start_node.state):
-        print("you pass the goal😂")
         return start_node, [start_node], 0  # goal, visited_nodes, count
 
     visited = set()
@@ -272,7 +260,6 @@ def A_star(initial_state, h_name):
         visited.add(node)
 
         if goal_test(node.state):
-            print("Goal Found!🥳🥳")
             return node, nodes_expanded, nodes_expanded_count
 
         for neighbour in node.get_neighbors():
@@ -281,3 +268,4 @@ def A_star(initial_state, h_name):
                                     neighbour))  # instead of check if it in the pq and minimize the f i push it and skip if i visited it
 
     return None, nodes_expanded, nodes_expanded_count
+

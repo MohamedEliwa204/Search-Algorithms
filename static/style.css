@@ -1,0 +1,300 @@
+/* --- Global Theme Variables --- */
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e1e3f;
+    --primary-color: #ff4b91;
+    --accent-color: #00e0ff;
+    --text-color: #ffffff;
+    --text-muted: #a0aec0;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --tile-bg: #4a4a70;
+    --tile-empty-bg: rgba(255, 255, 255, 0.05);
+    --success-color: #3ee577;
+    --error-color: #ff6b6b;
+}
+
+/* --- Base Setup --- */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: "Inter", "Poppins", sans-serif;
+    background: linear-gradient(135deg, var(--bg-color), #1a1a2e, #0f3460);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* --- Typography --- */
+h1, h2 {
+    text-align: center;
+    color: var(--primary-color);
+    text-shadow: 0 0 12px var(--primary-color);
+    animation: fadeIn 1s ease-out;
+}
+
+h1 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+}
+
+h2 {
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    color: var(--accent-color);
+}
+
+p {
+    color: var(--text-muted);
+}
+
+/* --- Main Container --- */
+.solver-container {
+    background: rgba(30, 30, 63, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    padding: clamp(20px, 4vw, 40px);
+    width: 95%;
+    max-width: 950px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.7s ease-out;
+    transition: all 0.4s ease;
+}
+
+.solver-container:hover {
+    box-shadow: 0 0 30px var(--accent-color);
+}
+
+/* --- Puzzle Input Section --- */
+#input-container {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 480px;
+}
+
+.puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 25px 0;
+    justify-content: center;
+}
+
+.puzzle-cell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--tile-empty-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color);
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.25s ease;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.puzzle-cell:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.05);
+}
+
+.puzzle-cell.invalid {
+    border-color: var(--error-color);
+    box-shadow: 0 0 12px var(--error-color);
+    color: var(--error-color);
+    animation: shake 0.3s ease;
+}
+
+/* --- Controls --- */
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+@media (min-width: 600px) {
+    .controls {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* --- Buttons & Select --- */
+button, select {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 220px;
+    box-shadow: 0 0 15px rgba(255, 75, 145, 0.4);
+}
+
+button:hover, select:hover {
+    background: var(--accent-color);
+    color: #000;
+    box-shadow: 0 0 25px var(--accent-color);
+    transform: scale(1.05);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- Dropdown Styling --- */
+select {
+    background: var(--tile-bg);
+    border: 1px solid var(--border-color);
+    appearance: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+/* --- Error Message --- */
+.error {
+    color: var(--error-color);
+    font-weight: bold;
+    text-align: center;
+    display: none;
+    margin-top: 10px;
+}
+
+.error.show {
+    display: block;
+}
+
+/* --- Output Section --- */
+#display-container {
+    max-width: 850px;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.solution-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    width: 100%;
+}
+
+.display-board-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+#display-board {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--tile-empty-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.2);
+}
+
+.display-tile {
+    background: var(--tile-bg);
+    border-radius: 12px;
+    color: var(--text-color);
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transition: all 0.4s ease;
+}
+
+.display-tile.empty {
+    background: none;
+}
+
+.results-panel {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(255, 75, 145, 0.2);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-item span:first-child {
+    color: var(--text-muted);
+}
+
+.result-item span:last-child {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+#reset-button {
+    width: 100%;
+    background: var(--success-color);
+    box-shadow: 0 0 20px rgba(62, 229, 119, 0.4);
+}
+
+#reset-button:hover {
+    background: #00d06f;
+    transform: scale(1.05);
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+/* --- Responsive Enhancements --- */
+@media (min-width: 768px) {
+    .solution-content {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .results-panel {
+        flex: 1;
+        margin-left: 20px;
+    }
+}
