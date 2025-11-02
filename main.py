@@ -145,13 +145,13 @@ def goal_test(state):
 # search algorithms
 def bfs(initial_state):
     queue = deque()
-    start_node = PuzzleNode(initial_state)
+    start_node = PuzzleNode(initial_state) # make the first state as a puzzle node and push it inside the queue
     queue.append(start_node)
     if goal_test(start_node.state):
         return start_node, [start_node], 0  # goal, visited_nodes, count
 
     visited = set()
-    visited.add(start_node.state)
+    visited.add(start_node.state)   # mark the initial state as visited
 
     nodes_expanded = []
     nodes_expanded_count = 0
