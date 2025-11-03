@@ -12,7 +12,6 @@
     --success-color: #3ee577;
     --error-color: #ff6b6b;
 }
-
 /* --- Base Setup --- */
 * {
     box-sizing: border-box;
@@ -102,8 +101,8 @@ p {
 
 .puzzle-cell:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 20px var(--primary-color);
+    border-color: var(--success-color);
+    box-shadow: 0 0 20px var(--success-color);
     background: rgba(255, 255, 255, 0.08);
     transform: scale(1.05);
 }
@@ -186,6 +185,7 @@ select {
 
 /* --- Output Section --- */
 #display-container {
+    display: none;
     max-width: 850px;
     width: 100%;
     margin-top: 40px;
